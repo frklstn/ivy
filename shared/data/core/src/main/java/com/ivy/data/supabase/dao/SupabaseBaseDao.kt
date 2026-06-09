@@ -1,7 +1,7 @@
 package com.ivy.data.supabase.dao
 
 import com.ivy.data.supabase.WorkspaceResolver
-import io.supabase.SupabaseClient
+import io.github.jan.supabase.SupabaseClient
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement

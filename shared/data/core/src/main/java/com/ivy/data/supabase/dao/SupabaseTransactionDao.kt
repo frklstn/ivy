@@ -5,10 +5,11 @@ import com.ivy.data.db.dao.read.TransactionDao
 import com.ivy.data.db.dao.write.WriteTransactionDao
 import com.ivy.data.db.entity.TransactionEntity
 import com.ivy.data.supabase.WorkspaceResolver
-import io.supabase.SupabaseClient
-import io.supabase.postgrest.from
-import io.supabase.postgrest.postgrest
-import io.supabase.postgrest.query.order.Order
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Order
+import io.github.jan.supabase.postgrest.query.filter.FilterOperator
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -20,7 +21,7 @@ class SupabaseTransactionDao @Inject constructor(
 
     private val table = "transactions"
 
-    private suspend fun queryAll(filter: suspend io.supabase.postgrest.query.filter.PostgrestFilterBuilder.() -> Unit = {}): List<TransactionEntity> {
+    private suspend fun queryAll(filter: suspend io.github.jan.supabase.postgrest.query.filter.PostgrestFilterBuilder.() -> Unit = {}): List<TransactionEntity> {
         val wsId = workspaceId()
         return supabaseClient.postgrest.from(table).select {
             filter {
@@ -89,7 +90,7 @@ class SupabaseTransactionDao @Inject constructor(
     }
 
     override suspend fun findAllUnspecifiedAndBetween(startDate: Instant, endDate: Instant): List<TransactionEntity> = queryAll {
-        isNull("categoryId")
+        filter("categoryId", FilterOperator.IS, "null")
         gte("dateTime", startDate.toString()); lte("dateTime", endDate.toString())
     }
 
@@ -103,7 +104,7 @@ class SupabaseTransactionDao @Inject constructor(
     override suspend fun findAllUnspecifiedAndTypeAndBetween(
         type: TransactionType, startDate: Instant, endDate: Instant
     ): List<TransactionEntity> = queryAll {
-        isNull("categoryId"); eq("type", type.name)
+        filter("categoryId", FilterOperator.IS, "null"); eq("type", type.name)
         gte("dateTime", startDate.toString()); lte("dateTime", endDate.toString())
     }
 
@@ -140,7 +141,7 @@ class SupabaseTransactionDao @Inject constructor(
         return supabaseClient.postgrest.from(table).select {
             filter {
                 eq("workspace_id", wsId); eq("isDeleted", false)
-                isNull("categoryId")
+                filter("categoryId", FilterOperator.IS, "null")
                 gte("dueDate", startDate.toString()); lte("dueDate", endDate.toString())
             }
             order("dateTime", Order.DESCENDING); order("dueDate", Order.ASCENDING)
@@ -197,7 +198,7 @@ class SupabaseTransactionDao @Inject constructor(
     override suspend fun countHappenedTransactions(): Long {
         val wsId = workspaceId()
         return supabaseClient.postgrest.from(table).select {
-            filter { eq("workspace_id", wsId); eq("isDeleted", false); not("dateTime", "is", null) }
+            filter { eq("workspace_id", wsId); eq("isDeleted", false); filterNot("dateTime", FilterOperator.IS, "null") }
         }.decodeList<TransactionEntity>().size.toLong()
     }
 
@@ -237,7 +238,7 @@ class SupabaseTransactionDao @Inject constructor(
     override suspend fun findLoanTransaction(loanId: UUID): TransactionEntity? {
         val wsId = workspaceId()
         return supabaseClient.postgrest.from(table).select {
-            filter { eq("workspace_id", wsId); eq("isDeleted", false); eq("loanId", loanId.toString()); isNull("loanRecordId") }
+            filter { eq("workspace_id", wsId); eq("isDeleted", false); eq("loanId", loanId.toString()); filter("loanRecordId", FilterOperator.IS, "null") }
         }.decodeList<TransactionEntity>().firstOrNull()
     }
 
@@ -274,7 +275,7 @@ class SupabaseWriteTransactionDao @Inject constructor(
             filter {
                 eq("workspace_id", workspaceId())
                 eq("recurringRuleId", recurringRuleId.toString())
-                isNull("dateTime")
+                filter("dateTime", FilterOperator.IS, "null")
             }
         }
     }

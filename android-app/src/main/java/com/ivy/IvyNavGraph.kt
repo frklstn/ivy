@@ -16,6 +16,7 @@ import com.ivy.importdata.csv.CSVScreen
 import com.ivy.importdata.csvimport.ImportCSVScreen
 import com.ivy.loans.loan.LoansScreen
 import com.ivy.loans.loandetails.LoanDetailsScreen
+import com.ivy.loans.pinjol.PinjolTrackerScreen
 import com.ivy.main.MainScreen
 import com.ivy.navigation.AttributionsScreen
 import com.ivy.navigation.BalanceScreen
@@ -35,6 +36,7 @@ import com.ivy.navigation.LoginScreen
 import com.ivy.navigation.MainScreen
 import com.ivy.navigation.OnboardingScreen
 import com.ivy.navigation.PieChartStatisticScreen
+import com.ivy.navigation.PinjolTrackerScreen
 import com.ivy.navigation.PlannedPaymentsScreen
 import com.ivy.navigation.PollScreen
 import com.ivy.navigation.ReleasesScreen
@@ -91,5 +93,6 @@ fun BoxWithConstraintsScope.IvyNavGraph(screen: Screen?) {
         DisclaimerScreen -> DisclaimerScreenImpl()
         PollScreen -> PollScreen()
         LoginScreen -> LoginScreenImpl()
+        PinjolTrackerScreen -> PinjolTrackerScreen(screen = PinjolTrackerScreen)
     }
 }

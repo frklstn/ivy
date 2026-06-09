@@ -4,9 +4,9 @@ import com.ivy.data.db.dao.read.SettingsDao
 import com.ivy.data.db.dao.write.WriteSettingsDao
 import com.ivy.data.db.entity.SettingsEntity
 import com.ivy.data.supabase.WorkspaceResolver
-import io.supabase.SupabaseClient
-import io.supabase.postgrest.from
-import io.supabase.postgrest.postgrest
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
 import java.util.UUID
 import javax.inject.Inject
 

@@ -255,16 +255,16 @@ ALTER TABLE public.income_timeline ENABLE ROW LEVEL SECURITY;
 -- 17. APP SETTINGS Table (Global Branding Settings)
 CREATE TABLE public.app_settings (
     id INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
-    app_name TEXT NOT NULL DEFAULT 'FinanceApp',
+    app_name TEXT NOT NULL DEFAULT 'Ivy Wallet',
     app_logo_url TEXT,
-    document_title TEXT NOT NULL DEFAULT 'FinanceApp',
+    document_title TEXT NOT NULL DEFAULT 'Ivy Wallet',
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     updated_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL
 );
 
-INSERT INTO public.app_settings (id)
-VALUES (1)
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO public.app_settings (id, app_name, document_title)
+VALUES (1, 'Ivy Wallet', 'Ivy Wallet')
+ON CONFLICT (id) DO UPDATE SET app_name = 'Ivy Wallet', document_title = 'Ivy Wallet';
 
 ALTER TABLE public.app_settings ENABLE ROW LEVEL SECURITY;
 

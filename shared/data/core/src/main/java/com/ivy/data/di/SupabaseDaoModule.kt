@@ -12,6 +12,7 @@ import com.ivy.data.db.dao.read.TagAssociationDao
 import com.ivy.data.db.dao.read.TagDao
 import com.ivy.data.db.dao.read.TransactionDao
 import com.ivy.data.db.dao.read.UserDao
+import com.ivy.data.db.dao.read.LoanTrackerDao
 import com.ivy.data.db.dao.write.WriteAccountDao
 import com.ivy.data.db.dao.write.WriteBudgetDao
 import com.ivy.data.db.dao.write.WriteCategoryDao
@@ -23,6 +24,7 @@ import com.ivy.data.db.dao.write.WriteSettingsDao
 import com.ivy.data.db.dao.write.WriteTagAssociationDao
 import com.ivy.data.db.dao.write.WriteTagDao
 import com.ivy.data.db.dao.write.WriteTransactionDao
+import com.ivy.data.db.dao.write.WriteLoanTrackerDao
 import com.ivy.data.supabase.WorkspaceResolver
 import com.ivy.data.supabase.dao.SupabaseAccountDao
 import com.ivy.data.supabase.dao.SupabaseBudgetDao
@@ -36,6 +38,7 @@ import com.ivy.data.supabase.dao.SupabaseTagAssociationDao
 import com.ivy.data.supabase.dao.SupabaseTagDao
 import com.ivy.data.supabase.dao.SupabaseTransactionDao
 import com.ivy.data.supabase.dao.SupabaseUserDao
+import com.ivy.data.supabase.dao.SupabaseLoanTrackerDao
 import com.ivy.data.supabase.dao.SupabaseWriteAccountDao
 import com.ivy.data.supabase.dao.SupabaseWriteBudgetDao
 import com.ivy.data.supabase.dao.SupabaseWriteCategoryDao
@@ -47,11 +50,12 @@ import com.ivy.data.supabase.dao.SupabaseWriteSettingsDao
 import com.ivy.data.supabase.dao.SupabaseWriteTagAssociationDao
 import com.ivy.data.supabase.dao.SupabaseWriteTagDao
 import com.ivy.data.supabase.dao.SupabaseWriteTransactionDao
+import com.ivy.data.supabase.dao.SupabaseWriteLoanTrackerDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.supabase.SupabaseClient
+import io.github.jan.supabase.SupabaseClient
 import javax.inject.Singleton
 
 @Module
@@ -132,6 +136,12 @@ object SupabaseDaoModule {
         client: SupabaseClient, ws: WorkspaceResolver
     ): UserDao = SupabaseUserDao(client, ws)
 
+    @Provides
+    @Singleton
+    fun provideLoanTrackerDao(
+        client: SupabaseClient, ws: WorkspaceResolver
+    ): LoanTrackerDao = SupabaseLoanTrackerDao(client, ws)
+
     // ---- Write DAOs ----
 
     @Provides
@@ -199,4 +209,10 @@ object SupabaseDaoModule {
     fun provideWriteTagAssociationDao(
         client: SupabaseClient, ws: WorkspaceResolver
     ): WriteTagAssociationDao = SupabaseWriteTagAssociationDao(client, ws)
+
+    @Provides
+    @Singleton
+    fun provideWriteLoanTrackerDao(
+        client: SupabaseClient, ws: WorkspaceResolver
+    ): WriteLoanTrackerDao = SupabaseWriteLoanTrackerDao(client, ws)
 }

@@ -28,10 +28,11 @@ detekt = "1.23.6" # https://detekt.dev/docs/gettingstarted/gradle/
 
 [libraries]
 # Supabase
-supabase-bom = { module = "io.supabase:bom", version.ref = "supabase-bom" }
-supabase-postgrest = { module = "io.supabase:postgrest-kt" }
-supabase-auth = { module = "io.supabase:auth-kt" }
-supabase-realtime = { module = "io.supabase:realtime-kt" }
+supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabase-bom" }
+supabase-kt = { module = "io.github.jan-tennert.supabase:supabase-kt" }
+supabase-postgrest = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
+supabase-auth = { module = "io.github.jan-tennert.supabase:auth-kt" }
+supabase-realtime = { module = "io.github.jan-tennert.supabase:realtime-kt" }
 
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version = "8.5.2" }
 

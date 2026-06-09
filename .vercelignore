@@ -1,0 +1,34 @@
+# Ignore Android project modules and files
+android-app/
+feature/
+shared/
+widget/
+temp/
+build/
+**/build/
+buildSrc/
+gradle/
+.gradle/
+.kotlin/
+.idea/
+fastlane/
+ci-actions/
+docs/
+
+# Ignore local configuration and scripts
+local.properties
+gradlew
+gradlew.bat
+debug.jks
+scripts/
+
+# Ignore Next.js / Node build and cache
+node_modules/
+.next/
+out/
+.vercel/
+.env*.local
+
+# Ignore OS files
+.DS_Store
+Thumbs.db

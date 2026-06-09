@@ -147,3 +147,5 @@ data object DisclaimerScreen : Screen
 data object PollScreen : Screen
 
 data object LoginScreen : Screen
+
+data object PinjolTrackerScreen : Screen

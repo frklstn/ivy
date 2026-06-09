@@ -1,9 +1,9 @@
 package com.ivy.data.supabase
 
-import io.supabase.SupabaseClient
-import io.supabase.auth.auth
-import io.supabase.postgrest.from
-import io.supabase.postgrest.postgrest
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable

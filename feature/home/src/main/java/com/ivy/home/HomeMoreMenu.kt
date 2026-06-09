@@ -68,6 +68,7 @@ import com.ivy.navigation.BudgetScreen
 import com.ivy.navigation.CategoriesScreen
 import com.ivy.navigation.IvyPreview
 import com.ivy.navigation.LoansScreen
+import com.ivy.navigation.PinjolTrackerScreen
 import com.ivy.navigation.PlannedPaymentsScreen
 import com.ivy.navigation.ReportScreen
 import com.ivy.navigation.SearchScreen
@@ -536,6 +537,26 @@ private fun QuickAccess(
             }
 
             Spacer(Modifier.weight(1f))
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        // Third Row — Pinjol Tracker
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.Top
+        ) {
+            Spacer(Modifier.weight(1f))
+
+            MoreMenuButton(
+                icon = R.drawable.ic_custom_loan_s,
+                label = "Pinjol Tracker",
+            ) {
+                nav.navigateTo(PinjolTrackerScreen)
+            }
+
+            Spacer(Modifier.weight(3f))
         }
     }
 }

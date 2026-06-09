@@ -6,9 +6,9 @@ import com.ivy.data.db.dao.write.WriteExchangeRatesDao
 import com.ivy.data.db.entity.ExchangeRateEntity
 import com.ivy.data.db.entity.UserEntity
 import com.ivy.data.supabase.WorkspaceResolver
-import io.supabase.SupabaseClient
-import io.supabase.postgrest.from
-import io.supabase.postgrest.postgrest
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

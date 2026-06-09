@@ -1,9 +1,9 @@
 package com.ivy.data.supabase
 
-import io.supabase.SupabaseClient
-import io.supabase.auth.auth
-import io.supabase.auth.providers.Email
-import io.supabase.auth.user.UserInfo
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.user.UserInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -14,9 +14,9 @@ class AuthService @Inject constructor(
     private val supabaseClient: SupabaseClient,
 ) {
 
-    val authState: Flow<AuthState> = supabaseClient.auth.sessionFlow.map { session ->
-        if (session != null) {
-            AuthState.Authenticated(session.accessToken)
+    val authState: kotlinx.coroutines.flow.Flow<AuthState> = supabaseClient.auth.sessionStatus.map { status ->
+        if (status is io.github.jan.supabase.auth.status.SessionStatus.Authenticated) {
+            AuthState.Authenticated(status.session.accessToken)
         } else {
             AuthState.Unauthenticated
         }
