@@ -94,7 +94,7 @@ jobs:
           TELEGRAM_CHAT_ID: "-1003913443231"
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
-          python scripts/telegram_notifier.py success "${{ steps.bot_start.outputs.msg_id }}" "app/build/outputs/apk/release/app-release.apk" "$COMMIT_MSG" "$GITHUB_SHA"
+          python scripts/telegram_notifier.py success "${{ steps.bot_start.outputs.msg_id }}" "android-app/build/outputs/apk/release/app-release.apk" "$COMMIT_MSG" "$GITHUB_SHA"
 
       - name: Bot - Failure Notification
         if: failure()
@@ -126,12 +126,12 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: Ivy-Wallet-Release.apk
-          path: app/build/outputs/apk/release/app-release.apk
+          path: android-app/build/outputs/apk/release/app-release.apk
 
       - name: Upload APK ke GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: app/build/outputs/apk/release/app-release.apk
+          files: android-app/build/outputs/apk/release/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
