@@ -95,11 +95,14 @@ if __name__ == "__main__":
         msg_id = sys.argv[2]
         commit_msg = sys.argv[3]
         sha = sys.argv[4][:7]
-        error_log = sys.argv[5] if len(sys.argv) > 5 else "Tidak ada log detail."
+        log_file_path = sys.argv[5] if len(sys.argv) > 5 else None
         
         text = (f"<b>❌ Build Gagal!</b>\n\n"
                 f"📝 <b>Commit:</b> {commit_msg}\n"
                 f"branch: <code>main</code> ({sha})\n\n"
-                f"⚠️ <b>Error Log (Terakhir):</b>\n"
-                f"<code>{error_log}</code>")
+                f"⚠️ Silakan cek detail kesalahan pada file log yang dilampirkan di bawah ini.")
         edit_message(msg_id, text)
+        
+        if log_file_path and os.path.exists(log_file_path):
+            caption = f"<b>📄 Build Log (Error)</b>\n🆔 Build: <code>{sha}</code>"
+            send_document(caption, log_file_path)

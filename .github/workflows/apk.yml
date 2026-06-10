@@ -85,9 +85,9 @@ jobs:
           TELEGRAM_CHAT_ID: "-1003913443231"
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
-          # Mengambil 30 baris terakhir dari build.log untuk detail error yang lebih lengkap
-          ERROR_LOG=$(tail -n 30 build.log | sed 's/<[^>]*>//g') 
-          python scripts/telegram_notifier.py fail "${{ steps.bot_start.outputs.msg_id }}" "$COMMIT_MSG" "$GITHUB_SHA" "$ERROR_LOG"
+          # Bersihkan escape codes dari log sebelum dikirim agar rapi
+          sed -i 's/\x1b\[[0-9;]*m//g' build.log
+          python scripts/telegram_notifier.py fail "${{ steps.bot_start.outputs.msg_id }}" "$COMMIT_MSG" "$GITHUB_SHA" "build.log"
 
       - name: Upload APK to Github Actions
         uses: actions/upload-artifact@v7
