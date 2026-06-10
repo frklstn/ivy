@@ -65,180 +65,207 @@ object SupabaseDaoModule {
 
     // ---- Read DAOs ----
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideAccountDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): AccountDao = SupabaseAccountDao(client, ws)
+    @Provides @Singleton
+    fun provideAccountDao(client: SupabaseClient, ws: WorkspaceResolver): AccountDao =
+        SupabaseAccountDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideTransactionDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): TransactionDao = SupabaseTransactionDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideAccountDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): AccountDao =
+        SupabaseAccountDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideCategoryDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): CategoryDao = SupabaseCategoryDao(client, ws)
+    @Provides @Singleton
+    fun provideTransactionDao(client: SupabaseClient, ws: WorkspaceResolver): TransactionDao =
+        SupabaseTransactionDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideBudgetDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): BudgetDao = SupabaseBudgetDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideTransactionDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): TransactionDao =
+        SupabaseTransactionDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideSettingsDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): SettingsDao = SupabaseSettingsDao(client, ws)
+    @Provides @Singleton
+    fun provideCategoryDao(client: SupabaseClient, ws: WorkspaceResolver): CategoryDao =
+        SupabaseCategoryDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideLoanDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): LoanDao = SupabaseLoanDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideCategoryDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): CategoryDao =
+        SupabaseCategoryDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideLoanRecordDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): LoanRecordDao = SupabaseLoanRecordDao(client, ws)
+    @Provides @Singleton
+    fun provideBudgetDao(client: SupabaseClient, ws: WorkspaceResolver): BudgetDao =
+        SupabaseBudgetDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun providePlannedPaymentRuleDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): PlannedPaymentRuleDao = SupabasePlannedPaymentRuleDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideBudgetDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): BudgetDao =
+        SupabaseBudgetDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideTagDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): TagDao = SupabaseTagDao(client, ws)
+    @Provides @Singleton
+    fun provideSettingsDao(client: SupabaseClient, ws: WorkspaceResolver): SettingsDao =
+        SupabaseSettingsDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideTagAssociationDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): TagAssociationDao = SupabaseTagAssociationDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideSettingsDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): SettingsDao =
+        SupabaseSettingsDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideExchangeRatesDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): ExchangeRatesDao = SupabaseExchangeRatesDao(client, ws)
+    @Provides @Singleton
+    fun provideLoanDao(client: SupabaseClient, ws: WorkspaceResolver): LoanDao =
+        SupabaseLoanDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideLoanTrackerDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): LoanTrackerDao = SupabaseLoanTrackerDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideLoanDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): LoanDao =
+        SupabaseLoanDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideUserDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): UserDao = SupabaseUserDao(client, ws)
+    @Provides @Singleton
+    fun provideLoanRecordDao(client: SupabaseClient, ws: WorkspaceResolver): LoanRecordDao =
+        SupabaseLoanRecordDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideLoanRecordDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): LoanRecordDao =
+        SupabaseLoanRecordDao(client, ws)
+
+    @Provides @Singleton
+    fun providePlannedPaymentRuleDao(client: SupabaseClient, ws: WorkspaceResolver): PlannedPaymentRuleDao =
+        SupabasePlannedPaymentRuleDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun providePlannedPaymentRuleDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): PlannedPaymentRuleDao =
+        SupabasePlannedPaymentRuleDao(client, ws)
+
+    @Provides @Singleton
+    fun provideTagDao(client: SupabaseClient, ws: WorkspaceResolver): TagDao =
+        SupabaseTagDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideTagDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): TagDao =
+        SupabaseTagDao(client, ws)
+
+    @Provides @Singleton
+    fun provideTagAssociationDao(client: SupabaseClient, ws: WorkspaceResolver): TagAssociationDao =
+        SupabaseTagAssociationDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideTagAssociationDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): TagAssociationDao =
+        SupabaseTagAssociationDao(client, ws)
+
+    @Provides @Singleton
+    fun provideExchangeRatesDao(client: SupabaseClient, ws: WorkspaceResolver): ExchangeRatesDao =
+        SupabaseExchangeRatesDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideExchangeRatesDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): ExchangeRatesDao =
+        SupabaseExchangeRatesDao(client, ws)
+
+    @Provides @Singleton
+    fun provideLoanTrackerDao(client: SupabaseClient, ws: WorkspaceResolver): LoanTrackerDao =
+        SupabaseLoanTrackerDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideLoanTrackerDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): LoanTrackerDao =
+        SupabaseLoanTrackerDao(client, ws)
+
+    @Provides @Singleton
+    fun provideUserDao(client: SupabaseClient, ws: WorkspaceResolver): UserDao =
+        SupabaseUserDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideUserDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): UserDao =
+        SupabaseUserDao(client, ws)
 
     // ---- Write DAOs ----
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteAccountDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteAccountDao = SupabaseWriteAccountDao(client, ws)
+    @Provides @Singleton
+    fun provideWriteAccountDao(client: SupabaseClient, ws: WorkspaceResolver): WriteAccountDao =
+        SupabaseWriteAccountDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteTransactionDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteTransactionDao = SupabaseWriteTransactionDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteAccountDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteAccountDao =
+        SupabaseWriteAccountDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteCategoryDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteCategoryDao = SupabaseWriteCategoryDao(client, ws)
+    @Provides @Singleton
+    fun provideWriteTransactionDao(client: SupabaseClient, ws: WorkspaceResolver): WriteTransactionDao =
+        SupabaseWriteTransactionDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteBudgetDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteBudgetDao = SupabaseWriteBudgetDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteTransactionDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteTransactionDao =
+        SupabaseWriteTransactionDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteSettingsDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteSettingsDao = SupabaseWriteSettingsDao(client, ws)
+    @Provides @Singleton
+    fun provideWriteCategoryDao(client: SupabaseClient, ws: WorkspaceResolver): WriteCategoryDao =
+        SupabaseWriteCategoryDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteLoanDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteLoanDao = SupabaseWriteLoanDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteCategoryDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteCategoryDao =
+        SupabaseWriteCategoryDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteLoanRecordDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteLoanRecordDao = SupabaseWriteLoanRecordDao(client, ws)
+    @Provides @Singleton
+    fun provideWriteBudgetDao(client: SupabaseClient, ws: WorkspaceResolver): WriteBudgetDao =
+        SupabaseWriteBudgetDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWritePlannedPaymentRuleDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WritePlannedPaymentRuleDao = SupabaseWritePlannedPaymentRuleDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteBudgetDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteBudgetDao =
+        SupabaseWriteBudgetDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
+    @Provides @Singleton
+    fun provideWriteSettingsDao(client: SupabaseClient, ws: WorkspaceResolver): WriteSettingsDao =
+        SupabaseWriteSettingsDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteSettingsDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteSettingsDao =
+        SupabaseWriteSettingsDao(client, ws)
+
+    @Provides @Singleton
+    fun provideWriteLoanDao(client: SupabaseClient, ws: WorkspaceResolver): WriteLoanDao =
+        SupabaseWriteLoanDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteLoanDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteLoanDao =
+        SupabaseWriteLoanDao(client, ws)
+
+    @Provides @Singleton
+    fun provideWriteLoanRecordDao(client: SupabaseClient, ws: WorkspaceResolver): WriteLoanRecordDao =
+        SupabaseWriteLoanRecordDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteLoanRecordDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteLoanRecordDao =
+        SupabaseWriteLoanRecordDao(client, ws)
+
+    @Provides @Singleton
+    fun provideWritePlannedPaymentRuleDao(client: SupabaseClient, ws: WorkspaceResolver): WritePlannedPaymentRuleDao =
+        SupabaseWritePlannedPaymentRuleDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideWritePlannedPaymentRuleDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WritePlannedPaymentRuleDao =
+        SupabaseWritePlannedPaymentRuleDao(client, ws)
+
+    @Provides @Singleton
     fun provideWriteExchangeRatesDao(
+        client: SupabaseClient, ws: WorkspaceResolver, readDao: ExchangeRatesDao
+    ): WriteExchangeRatesDao = SupabaseWriteExchangeRatesDao(client, ws, readDao as SupabaseExchangeRatesDao)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteExchangeRatesDaoNamed(
         client: SupabaseClient, ws: WorkspaceResolver, @Named("supabase") readDao: ExchangeRatesDao
     ): WriteExchangeRatesDao = SupabaseWriteExchangeRatesDao(client, ws, readDao as SupabaseExchangeRatesDao)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteTagDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteTagDao = SupabaseWriteTagDao(client, ws)
+    @Provides @Singleton
+    fun provideWriteTagDao(client: SupabaseClient, ws: WorkspaceResolver): WriteTagDao =
+        SupabaseWriteTagDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteTagAssociationDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteTagAssociationDao = SupabaseWriteTagAssociationDao(client, ws)
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteTagDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteTagDao =
+        SupabaseWriteTagDao(client, ws)
 
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteLoanTrackerDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteLoanTrackerDao = SupabaseWriteLoanTrackerDao(client, ws)
+    @Provides @Singleton
+    fun provideWriteTagAssociationDao(client: SupabaseClient, ws: WorkspaceResolver): WriteTagAssociationDao =
+        SupabaseWriteTagAssociationDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteTagAssociationDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteTagAssociationDao =
+        SupabaseWriteTagAssociationDao(client, ws)
+
+    @Provides @Singleton
+    fun provideWriteLoanTrackerDao(client: SupabaseClient, ws: WorkspaceResolver): WriteLoanTrackerDao =
+        SupabaseWriteLoanTrackerDao(client, ws)
+
+    @Provides @Singleton @Named("supabase")
+    fun provideWriteLoanTrackerDaoNamed(client: SupabaseClient, ws: WorkspaceResolver): WriteLoanTrackerDao =
+        SupabaseWriteLoanTrackerDao(client, ws)
 }
