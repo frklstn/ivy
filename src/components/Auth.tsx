@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Mail, Lock, UserPlus, LogIn, ArrowRight } from 'lucide-react';
+import { Mail, Lock, LogIn, ArrowRight } from 'lucide-react';
 
 type AuthProps = {
   onSessionActive: () => void;
@@ -45,8 +45,9 @@ export default function Auth({ onSessionActive }: AuthProps) {
         if (error) throw error;
         onSessionActive();
       }
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Terjadi kesalahan saat memproses autentikasi.');
+    } catch (err) {
+      const error = err as Error;
+      setErrorMsg(error.message || 'Terjadi kesalahan saat memproses autentikasi.');
     } finally {
       setLoading(false);
     }
@@ -63,8 +64,9 @@ export default function Auth({ onSessionActive }: AuthProps) {
         },
       });
       if (error) throw error;
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Gagal masuk menggunakan Google.');
+    } catch (err) {
+      const error = err as Error;
+      setErrorMsg(error.message || 'Gagal masuk menggunakan Google.');
     }
   };
 

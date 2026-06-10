@@ -5,9 +5,9 @@ import { supabase, Account, Category, Transaction, Profile } from '@/lib/supabas
 import { intToHex, hexToInt, formatCurrency, PREMIUM_COLORS } from '@/lib/utils';
 import { 
   Wallet, Plus, Edit2, Trash2, LogOut, ArrowUpRight, ArrowDownLeft, 
-  ArrowLeftRight, Calendar, Folder, Check, X, CreditCard, 
+  ArrowLeftRight, Calendar, Folder, Check, X, 
   TrendingUp, TrendingDown, Landmark, Sparkles, PieChart as ChartIcon, 
-  Percent, DollarSign, User, AlertCircle
+  Percent, User, AlertCircle
 } from 'lucide-react';
 import { 
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip as ChartTooltip, 
@@ -128,11 +128,6 @@ export default function Dashboard() {
   const [loanRecordAccountId, setLoanRecordAccountId] = useState('');
   const [loanRecordNote, setLoanRecordNote] = useState('');
 
-  useEffect(() => {
-    setIsMounted(true);
-    fetchUserData();
-  }, []);
-
   const fetchUserData = async () => {
     try {
       setLoading(true);
@@ -215,6 +210,20 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchUserData();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -1202,7 +1211,7 @@ export default function Dashboard() {
                             <Cell key={`cell-${index}`} fill={entry.color} />
                           ))}
                         </Pie>
-                        <ChartTooltip formatter={(val: any) => formatCurrency(Number(val ?? 0))} />
+                        <ChartTooltip formatter={(val: number | string) => formatCurrency(Number(val ?? 0))} />
                       </PieChart>
                     </ResponsiveContainer>
                   ) : (
@@ -1225,7 +1234,7 @@ export default function Dashboard() {
                       <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                       <XAxis dataKey="name" stroke="#94a3b8" />
                       <YAxis stroke="#94a3b8" width={80} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                      <ChartTooltip formatter={(val: any) => formatCurrency(Number(val ?? 0))} />
+                      <ChartTooltip formatter={(val: number | string) => formatCurrency(Number(val ?? 0))} />
                       <Legend />
                       <Bar dataKey="Income" name="Pemasukan" fill="#10b981" />
                       <Bar dataKey="Expense" name="Pengeluaran" fill="#ef4444" />
