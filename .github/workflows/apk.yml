@@ -19,6 +19,13 @@ jobs:
       - name: Restore google-services.json
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > android-app/google-services.json
 
+      - name: Restore Keystore (sign.jks)
+        run: |
+          echo "$SIGNING_KEYSTORE_JKS" > sign.jks.b64
+          base64 -d -i sign.jks.b64 > sign.jks
+        env:
+          SIGNING_KEYSTORE_JKS: ${{ secrets.SIGNING_KEYSTORE }}
+
       - name: Setup Java
         uses: actions/setup-java@v5
         with:

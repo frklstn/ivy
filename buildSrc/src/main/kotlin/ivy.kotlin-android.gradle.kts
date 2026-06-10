@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.bundles.kotlin)
     implementation(catalog.bundle("kotlin-android"))
     implementation(libs.timber)
+    implementation(libs.bundles.activity)
 
     testImplementation(libs.bundles.testing)
 }

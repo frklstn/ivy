@@ -28,12 +28,6 @@ android {
     }
 
     signingConfigs {
-        getByName("debug") {
-            storeFile = file("../debug.jks")
-            storePassword = "IVY7834!DEbug"
-            keyAlias = "debug"
-            keyPassword = "IVY7834!DEbug"
-        }
 
         create("release") {
             storeFile = file("../sign.jks")
@@ -57,21 +51,10 @@ android {
 
             signingConfig = signingConfigs.getByName("release")
 
-            resValue("string", "app_name", "Ivy Wallet")
+
         }
 
-        debug {
-            isMinifyEnabled = false
-            isShrinkResources = false
 
-            isDebuggable = true
-            isDefault = true
-
-            signingConfig = signingConfigs.getByName("debug")
-
-            applicationIdSuffix = ".debug"
-            resValue("string", "app_name", "Ivy Wallet Debug")
-        }
 
     }
 
