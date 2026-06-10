@@ -28,8 +28,54 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v6
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Bot - Start Build Notification
+        id: bot_start
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.BOTFATHER_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: "-1003913443231"
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
+          MSG_ID=$(python scripts/telegram_notifier.py start "$COMMIT_MSG" "$GITHUB_REPOSITORY" "$GITHUB_SHA")
+          echo "msg_id=$MSG_ID" >> $GITHUB_OUTPUT
+
       - name: Build Demo APK
-        run: ./gradlew assembleDemo
+        id: build_step
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.BOTFATHER_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: "-1003913443231"
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
+          python scripts/telegram_notifier.py update "${{ steps.bot_start.outputs.msg_id }}" "Sedang membangun APK (assembleDemo)..." "$COMMIT_MSG" "$GITHUB_SHA"
+          # Simpan log ke file build.log sambil tetap menampilkannya di konsol
+          ./gradlew assembleDemo 2>&1 | tee build.log
+
+      - name: Bot - Success Notification
+        if: success()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.BOTFATHER_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: "-1003913443231"
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
+          python scripts/telegram_notifier.py success "${{ steps.bot_start.outputs.msg_id }}" "android-app/build/outputs/apk/demo/app-demo.apk" "$COMMIT_MSG" "$GITHUB_SHA"
+
+      - name: Bot - Failure Notification
+        if: failure()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.BOTFATHER_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: "-1003913443231"
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
+          # Mengambil 30 baris terakhir dari build.log untuk detail error yang lebih lengkap
+          ERROR_LOG=$(tail -n 30 build.log | sed 's/<[^>]*>//g') 
+          python scripts/telegram_notifier.py fail "${{ steps.bot_start.outputs.msg_id }}" "$COMMIT_MSG" "$GITHUB_SHA" "$ERROR_LOG"
 
       - name: Upload APK to Github Actions
         uses: actions/upload-artifact@v7
@@ -44,16 +90,3 @@ jobs:
           files: android-app/build/outputs/apk/demo/app-demo.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload APK in Telegram Group
-        if: |
-          github.ref == 'refs/heads/main'
-        run: |
-          COMMIT_LINK="https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
-          COMMIT_MESSAGE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}" | jq -r .commit.message | cut -c 1-100)
-          CAPTION=$'Ivy Wallet Demo APK:\n\n'"$COMMIT_MESSAGE"$'\n... see commit at: '"$COMMIT_LINK"
-          
-          curl -F "chat_id=-1003913443231" \
-               -F "document=@android-app/build/outputs/apk/demo/app-demo.apk" \
-               -F "caption=$CAPTION" \
-               https://api.telegram.org/bot${{ secrets.BOTFATHER_TELEGRAM_BOT_TOKEN }}/sendDocument
