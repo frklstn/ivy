@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "512590888821",
+    "project_id": "ivy-wallet-499002",
+    "storage_bucket": "ivy-wallet-499002.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512590888821:android:9c9420baa926338e1f5d3c",
+        "android_client_info": {
+          "package_name": "com.ivy.wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "512590888821-pbecpmbnnqh1tii8sltkfkpb0pff4ic5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-6o9lfTQQ10iVBxp2Gvrdcwrt9G9aoAk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "512590888821-pbecpmbnnqh1tii8sltkfkpb0pff4ic5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
