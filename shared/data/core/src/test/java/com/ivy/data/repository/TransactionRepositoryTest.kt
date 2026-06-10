@@ -44,6 +44,7 @@ class TransactionRepositoryTest {
     private val mapper = mockk<TransactionMapper>()
     private val transactionDao = mockk<TransactionDao>()
     private val writeTransactionDao = mockk<WriteTransactionDao>()
+    private val supabaseWriteDao = mockk<WriteTransactionDao>(relaxed = true)
     private val tagRepository = mockk<TagRepository>(relaxed = true)
 
     private lateinit var repository: TransactionRepository
@@ -59,8 +60,10 @@ class TransactionRepositoryTest {
         mapper = mapper,
         transactionDao = fakeDao ?: transactionDao,
         writeTransactionDao = fakeDao ?: writeTransactionDao,
+        supabaseWriteDao = supabaseWriteDao,
         dispatchersProvider = TestDispatchersProvider,
-        tagRepository = tagRepository
+        tagRepository = tagRepository,
+        scope = runTest { this }
     )
 
     @Test
