@@ -1,5 +1,5 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.configuration.updateBuildConfiguration": "automatic",
     "java.jdt.ls.java.home": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot",
     "java.configuration.runtimes": [
         {
