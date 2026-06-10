@@ -1211,7 +1211,7 @@ export default function Dashboard() {
                             <Cell key={`cell-${index}`} fill={entry.color} />
                           ))}
                         </Pie>
-                        <ChartTooltip formatter={(val: number | string) => formatCurrency(Number(val ?? 0))} />
+                        <ChartTooltip formatter={(val: any) => formatCurrency(Number(val ?? 0))} />
                       </PieChart>
                     </ResponsiveContainer>
                   ) : (
@@ -1234,7 +1234,7 @@ export default function Dashboard() {
                       <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                       <XAxis dataKey="name" stroke="#94a3b8" />
                       <YAxis stroke="#94a3b8" width={80} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                      <ChartTooltip formatter={(val: number | string) => formatCurrency(Number(val ?? 0))} />
+                      <ChartTooltip formatter={(val: any) => formatCurrency(Number(val ?? 0))} />
                       <Legend />
                       <Bar dataKey="Income" name="Pemasukan" fill="#10b981" />
                       <Bar dataKey="Expense" name="Pengeluaran" fill="#ef4444" />
