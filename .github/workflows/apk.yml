@@ -36,14 +36,30 @@ jobs:
       - name: Install Dependencies
         run: pip install requests
 
-      - name: Bot - Start Build Notification
+      - name: Restore Bot Message ID
+        id: cache-msg
+        uses: actions/cache@v4
+        with:
+          path: .bot_msg_id
+          key: bot-msg-id-${{ github.ref_name }}
+
+      - name: Bot - Start & Cleanup
         id: bot_start
         env:
           TELEGRAM_TOKEN: ${{ secrets.BOTFATHER_TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: "-1003913443231"
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
+          
+          # Hapus pesan lama jika ada di cache
+          if [ -f .bot_msg_id ]; then
+            OLD_MSG_ID=$(cat .bot_msg_id)
+            python scripts/telegram_notifier.py delete "$OLD_MSG_ID" || true
+          fi
+          
+          # Kirim pesan baru
           MSG_ID=$(python scripts/telegram_notifier.py start "$COMMIT_MSG" "$GITHUB_REPOSITORY" "$GITHUB_SHA")
+          echo "$MSG_ID" > .bot_msg_id
           echo "msg_id=$MSG_ID" >> $GITHUB_OUTPUT
 
       - name: Build Demo APK
@@ -54,18 +70,10 @@ jobs:
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
           chmod +x scripts/*.sh
-          
-          # Buat file lock untuk menandakan build mulai
           touch build_running.lock
-          
-          # Jalankan monitor di background
           ./scripts/live_monitor.sh "${{ steps.bot_start.outputs.msg_id }}" "$COMMIT_MSG" "$GITHUB_SHA" &
           MONITOR_PID=$!
-          
-          # Jalankan build
           ./gradlew assembleDemo 2>&1 | tee build.log
-          
-          # Hapus file lock untuk menghentikan monitor
           rm build_running.lock
           wait $MONITOR_PID || true
 
@@ -85,9 +93,24 @@ jobs:
           TELEGRAM_CHAT_ID: "-1003913443231"
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
-          # Bersihkan escape codes dari log sebelum dikirim agar rapi
-          sed -i 's/\x1b\[[0-9;]*m//g' build.log
+          [ -f build.log ] && sed -i 's/\x1b\[[0-9;]*m//g' build.log
           python scripts/telegram_notifier.py fail "${{ steps.bot_start.outputs.msg_id }}" "$COMMIT_MSG" "$GITHUB_SHA" "build.log"
+
+      - name: Bot - Cancelled Notification
+        if: cancelled()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.BOTFATHER_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: "-1003913443231"
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
+          python scripts/telegram_notifier.py cancel "${{ steps.bot_start.outputs.msg_id }}" "$COMMIT_MSG" "$GITHUB_SHA"
+
+      - name: Save Bot Message ID
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .bot_msg_id
+          key: bot-msg-id-${{ github.ref_name }}-${{ github.run_id }}
 
       - name: Upload APK to Github Actions
         uses: actions/upload-artifact@v7

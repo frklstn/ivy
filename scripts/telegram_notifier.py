@@ -28,6 +28,15 @@ def edit_message(message_id, text):
     response = requests.post(url, json=payload)
     return response.json()
 
+def delete_message(message_id):
+    url = f"https://api.telegram.org/bot{TOKEN}/deleteMessage"
+    payload = {
+        "chat_id": CHAT_ID,
+        "message_id": message_id
+    }
+    response = requests.post(url, json=payload)
+    return response.json()
+
 def send_document(caption, file_path):
     url = f"https://api.telegram.org/bot{TOKEN}/sendDocument"
     with open(file_path, 'rb') as f:
@@ -97,12 +106,34 @@ if __name__ == "__main__":
         sha = sys.argv[4][:7]
         log_file_path = sys.argv[5] if len(sys.argv) > 5 else None
         
+        # Coba ekstraksi bagian "What went wrong" dari log
+        detailed_error = "Tidak dapat mengekstraksi detail error."
+        if log_file_path and os.path.exists(log_file_path):
+            with open(log_file_path, 'r') as f:
+                content = f.read()
+                if "* What went wrong:" in content:
+                    detailed_error = content.split("* What went wrong:")[1].split("* Try:")[0].strip()
+        
         text = (f"<b>❌ Build Gagal!</b>\n\n"
                 f"📝 <b>Commit:</b> {commit_msg}\n"
                 f"branch: <code>main</code> ({sha})\n\n"
-                f"⚠️ Silakan cek detail kesalahan pada file log yang dilampirkan di bawah ini.")
+                f"🔍 <b>Penyebab (Ringkasan):</b>\n<code>{detailed_error}</code>\n\n"
+                f"⚠️ Detail lengkap ada pada file log terlampir.")
         edit_message(msg_id, text)
         
         if log_file_path and os.path.exists(log_file_path):
-            caption = f"<b>📄 Build Log (Error)</b>\n🆔 Build: <code>{sha}</code>"
+            caption = f"<b>📄 Full Build Log</b>\n🆔 Build: <code>{sha}</code>"
             send_document(caption, log_file_path)
+
+    elif action == "delete":
+        msg_id = sys.argv[2]
+        delete_message(msg_id)
+
+    elif action == "cancel":
+        msg_id = sys.argv[2]
+        commit_msg = sys.argv[3]
+        sha = sys.argv[4][:7]
+        text = (f"<b>⚪ Build Dibatalkan</b>\n\n"
+                f"📝 <b>Commit:</b> {commit_msg}\n"
+                f"Status: Dihentikan karena ada build baru atau dibatalkan manual.")
+        edit_message(msg_id, text)
