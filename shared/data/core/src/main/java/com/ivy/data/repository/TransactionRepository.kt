@@ -21,14 +21,18 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.util.UUID
-import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import javax.inject.Named
 
 class TransactionRepository @Inject constructor(
     private val mapper: TransactionMapper,
     private val transactionDao: TransactionDao,
     private val writeTransactionDao: WriteTransactionDao,
+    @Named("supabase") private val supabaseWriteDao: WriteTransactionDao,
     private val dispatchersProvider: DispatchersProvider,
-    private val tagRepository: TagRepository
+    private val tagRepository: TagRepository,
+    private val scope: CoroutineScope
 ) {
     suspend fun findAll(): List<Transaction> = withContext(dispatchersProvider.io) {
         val tagMap = async { findAllTagAssociations() }
@@ -259,23 +263,48 @@ class TransactionRepository @Inject constructor(
 
     suspend fun save(value: Transaction) {
         withContext(dispatchersProvider.io) {
-            writeTransactionDao.save(
-                with(mapper) { value.toEntity() }
-            )
+            val entity = with(mapper) { value.toEntity() }
+            writeTransactionDao.save(entity)
+            
+            // Background sync to Supabase
+            scope.launch(dispatchersProvider.io) {
+                try {
+                    supabaseWriteDao.save(entity)
+                } catch (e: Exception) {
+                    // Log error or schedule retry
+                }
+            }
         }
     }
 
     suspend fun saveMany(value: List<Transaction>) {
         withContext(dispatchersProvider.io) {
-            writeTransactionDao.saveMany(
-                value.map { with(mapper) { it.toEntity() } }
-            )
+            val entities = value.map { with(mapper) { it.toEntity() } }
+            writeTransactionDao.saveMany(entities)
+            
+            // Background sync to Supabase
+            scope.launch(dispatchersProvider.io) {
+                try {
+                    supabaseWriteDao.saveMany(entities)
+                } catch (e: Exception) {
+                    // Log error
+                }
+            }
         }
     }
 
     suspend fun deleteById(id: TransactionId) {
         withContext(dispatchersProvider.io) {
             writeTransactionDao.deleteById(id.value)
+            
+            // Background sync to Supabase
+            scope.launch(dispatchersProvider.io) {
+                try {
+                    supabaseWriteDao.deleteById(id.value)
+                } catch (e: Exception) {
+                    // Log error
+                }
+            }
         }
     }
 
