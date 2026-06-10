@@ -253,11 +253,4 @@ object SupabaseDaoModule {
     fun provideWriteLoanTrackerDao(
         client: SupabaseClient, ws: WorkspaceResolver
     ): WriteLoanTrackerDao = SupabaseWriteLoanTrackerDao(client, ws)
-    
-    @Provides
-    @Singleton
-    @Named("supabase")
-    fun provideWriteTransactionDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): WriteTransactionDao = SupabaseWriteTransactionDao(client, ws)
 }
