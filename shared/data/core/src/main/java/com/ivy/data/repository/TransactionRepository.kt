@@ -311,18 +311,45 @@ class TransactionRepository @Inject constructor(
     suspend fun deleteAllByAccountId(accountId: AccountId) {
         withContext(dispatchersProvider.io) {
             writeTransactionDao.deleteAllByAccountId(accountId.value)
+            
+            // Background sync to Supabase
+            scope.launch(dispatchersProvider.io) {
+                try {
+                    supabaseWriteDao.deleteAllByAccountId(accountId.value)
+                } catch (e: Exception) {
+                    // Log error
+                }
+            }
         }
     }
 
     suspend fun deletedByRecurringRuleIdAndNoDateTime(recurringRuleId: UUID) {
         withContext(dispatchersProvider.io) {
             writeTransactionDao.deletedByRecurringRuleIdAndNoDateTime(recurringRuleId)
+            
+            // Background sync to Supabase
+            scope.launch(dispatchersProvider.io) {
+                try {
+                    supabaseWriteDao.deletedByRecurringRuleIdAndNoDateTime(recurringRuleId)
+                } catch (e: Exception) {
+                    // Log error
+                }
+            }
         }
     }
 
     suspend fun deleteAll() {
         withContext(dispatchersProvider.io) {
             writeTransactionDao.deleteAll()
+            
+            // Background sync to Supabase
+            scope.launch(dispatchersProvider.io) {
+                try {
+                    supabaseWriteDao.deleteAll()
+                } catch (e: Exception) {
+                    // Log error
+                }
+            }
         }
     }
 

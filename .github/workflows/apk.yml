@@ -34,6 +34,14 @@ jobs:
           name: Ivy-Wallet-Demo.apk
           path: app/build/outputs/apk/demo/app-demo.apk
 
+      - name: Upload APK to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app/build/outputs/apk/demo/app-demo.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload APK in Telegram Group
         if: |
           github.ref == 'refs/heads/main'

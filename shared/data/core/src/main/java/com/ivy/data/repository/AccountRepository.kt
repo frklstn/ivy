@@ -10,13 +10,18 @@ import com.ivy.data.repository.mapper.AccountMapper
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import javax.inject.Named
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Singleton
 class AccountRepository @Inject constructor(
     private val mapper: AccountMapper,
     private val accountDao: AccountDao,
     private val writeAccountDao: WriteAccountDao,
+    @Named("supabase") private val supabaseWriteDao: WriteAccountDao,
     private val dispatchersProvider: DispatchersProvider,
+    private val scope: CoroutineScope,
     memoFactory: RepositoryMemoFactory,
 ) {
     private val memo = memoFactory.createMemo(
@@ -51,19 +56,44 @@ class AccountRepository @Inject constructor(
     }
 
     suspend fun save(value: Account): Unit = memo.save(value) {
-        writeAccountDao.save(
-            with(mapper) { it.toEntity() }
-        )
+        val entity = with(mapper) { it.toEntity() }
+        writeAccountDao.save(entity)
+        
+        // Background sync to Supabase
+        scope.launch(dispatchersProvider.io) {
+            try {
+                supabaseWriteDao.save(entity)
+            } catch (e: Exception) {
+                // Log error
+            }
+        }
     }
 
     suspend fun saveMany(values: List<Account>): Unit = memo.saveMany(values) {
-        writeAccountDao.saveMany(
-            it.map { with(mapper) { it.toEntity() } }
-        )
+        val entities = it.map { with(mapper) { it.toEntity() } }
+        writeAccountDao.saveMany(entities)
+        
+        // Background sync to Supabase
+        scope.launch(dispatchersProvider.io) {
+            try {
+                supabaseWriteDao.saveMany(entities)
+            } catch (e: Exception) {
+                // Log error
+            }
+        }
     }
 
     suspend fun deleteById(id: AccountId): Unit = memo.deleteById(id) {
         writeAccountDao.deleteById(id.value)
+        
+        // Background sync to Supabase
+        scope.launch(dispatchersProvider.io) {
+            try {
+                supabaseWriteDao.deleteById(id.value)
+            } catch (e: Exception) {
+                // Log error
+            }
+        }
     }
 
     suspend fun deleteAll(): Unit = memo.deleteAll(

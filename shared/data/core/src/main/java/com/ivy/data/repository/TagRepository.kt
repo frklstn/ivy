@@ -17,6 +17,9 @@ import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+import javax.inject.Named
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Singleton
 class TagRepository @Inject constructor(
@@ -24,8 +27,10 @@ class TagRepository @Inject constructor(
     private val tagDao: TagDao,
     private val tagAssociationDao: TagAssociationDao,
     private val writeTagDao: WriteTagDao,
+    @Named("supabase") private val supabaseWriteDao: WriteTagDao,
     private val writeTagAssociationDao: WriteTagAssociationDao,
     private val dispatchersProvider: DispatchersProvider,
+    private val scope: CoroutineScope,
     memoFactory: RepositoryMemoFactory,
 ) {
     private val memo = memoFactory.createMemo(
@@ -148,7 +153,17 @@ class TagRepository @Inject constructor(
     }
 
     suspend fun save(value: Tag): Unit = memo.save(value) {
-        writeTagDao.save(with(mapper) { it.toEntity() })
+        val entity = with(mapper) { it.toEntity() }
+        writeTagDao.save(entity)
+        
+        // Background sync to Supabase
+        scope.launch(dispatchersProvider.io) {
+            try {
+                supabaseWriteDao.save(entity)
+            } catch (e: Exception) {
+                // Log error
+            }
+        }
     }
 
     suspend fun deleteById(id: TagId): Unit = memo.deleteById(
@@ -156,6 +171,17 @@ class TagRepository @Inject constructor(
         deleteByIdOperation = {
             writeTagAssociationDao.deleteAssociationsByTagId(it.value)
             writeTagDao.deleteById(it.value)
+            
+            // Background sync to Supabase
+            scope.launch(dispatchersProvider.io) {
+                try {
+                    // Note: Supabase RLS handles association cleanup usually,
+                    // but we should ideally have a SupabaseWriteTagDao that handles this.
+                    supabaseWriteDao.deleteById(it.value)
+                } catch (e: Exception) {
+                    // Log error
+                }
+            }
         }
     )
 
