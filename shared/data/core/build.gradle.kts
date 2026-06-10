@@ -10,15 +10,12 @@ android {
         buildConfig = true
     }
 
-    val localProperties = java.util.Properties()
-    val localPropertiesFile = rootProject.file("local.properties")
-    if (localPropertiesFile.exists()) {
-        localProperties.load(localPropertiesFile.inputStream())
-    }
-
     defaultConfig {
-        buildConfigField("String", "SUPABASE_URL", "\"${localProperties.getProperty("SUPABASE_URL") ?: ""}\"")
-        buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProperties.getProperty("SUPABASE_ANON_KEY") ?: ""}\"")
+        val supabaseUrl: String = (project.findProperty("SUPABASE_URL") ?: "").toString()
+        val supabaseKey: String = (project.findProperty("SUPABASE_ANON_KEY") ?: "").toString()
+
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"$supabaseKey\"")
     }
 }
 
