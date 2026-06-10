@@ -73,23 +73,6 @@ android {
             resValue("string", "app_name", "Ivy Wallet Debug")
         }
 
-        create("demo") {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-
-            matchingFallbacks.add("release")
-
-            isDebuggable = false
-            isDefault = false
-
-            signingConfig = signingConfigs.getByName("debug")
-
-            resValue("string", "app_name", "Ivy Wallet")
-        }
     }
 
     val javaVersion = libs.versions.jvm.target.get()
