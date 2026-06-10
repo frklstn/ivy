@@ -23,6 +23,7 @@ import java.time.Instant
 import java.util.UUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import javax.inject.Named
 
 class TransactionRepository @Inject constructor(
