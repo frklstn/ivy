@@ -14,7 +14,7 @@ while [ -f "build_running.lock" ]; do
         LOG_PREVIEW=$(tail -n 5 "$LOG_FILE" | sed 's/\x1b\[[0-9;]*m//g' | sed 's/<[^>]*>//g' | cut -c 1-200)
         
         # Kirim update ke Telegram
-        python3 scripts/telegram_notifier.py update "$MSG_ID" "Membangun APK (assembleDemo)..." "$COMMIT_MSG" "$SHA" "$LOG_PREVIEW"
+        python3 scripts/telegram_notifier.py update "$MSG_ID" "Membangun APK (assembleRelease)..." "$COMMIT_MSG" "$SHA" "$LOG_PREVIEW"
     fi
     sleep 10 # Update setiap 10 detik agar tidak kena rate limit Telegram
 done

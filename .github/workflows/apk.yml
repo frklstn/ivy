@@ -10,7 +10,7 @@ on:
 
 
 jobs:
-  assemble_demo_apk:
+  assemble_release_apk:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout GIT
@@ -62,18 +62,21 @@ jobs:
           echo "$MSG_ID" > .bot_msg_id
           echo "msg_id=$MSG_ID" >> $GITHUB_OUTPUT
 
-      - name: Build Demo APK
+      - name: Build Release APK
         id: build_step
         env:
           TELEGRAM_TOKEN: ${{ secrets.BOTFATHER_TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: "-1003913443231"
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
           chmod +x scripts/*.sh
           touch build_running.lock
           ./scripts/live_monitor.sh "${{ steps.bot_start.outputs.msg_id }}" "$COMMIT_MSG" "$GITHUB_SHA" &
           MONITOR_PID=$!
-          ./gradlew assembleDemo 2>&1 | tee build.log
+          ./gradlew :app:assembleRelease 2>&1 | tee build.log
           rm build_running.lock
           wait $MONITOR_PID || true
 
@@ -84,7 +87,7 @@ jobs:
           TELEGRAM_CHAT_ID: "-1003913443231"
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
-          python scripts/telegram_notifier.py success "${{ steps.bot_start.outputs.msg_id }}" "android-app/build/outputs/apk/demo/app-demo.apk" "$COMMIT_MSG" "$GITHUB_SHA"
+          python scripts/telegram_notifier.py success "${{ steps.bot_start.outputs.msg_id }}" "app/build/outputs/apk/release/app-release.apk" "$COMMIT_MSG" "$GITHUB_SHA"
 
       - name: Bot - Failure Notification
         if: failure()
@@ -112,16 +115,16 @@ jobs:
           path: .bot_msg_id
           key: bot-msg-id-${{ github.ref_name }}-${{ github.run_id }}
 
-      - name: Upload APK to Github Actions
+      - name: Upload APK ke Github Actions
         uses: actions/upload-artifact@v7
         with:
-          name: Ivy-Wallet-Demo.apk
-          path: android-app/build/outputs/apk/demo/app-demo.apk
+          name: Ivy-Wallet-Release.apk
+          path: app/build/outputs/apk/release/app-release.apk
 
-      - name: Upload APK to GitHub Release
+      - name: Upload APK ke GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: android-app/build/outputs/apk/demo/app-demo.apk
+          files: app/build/outputs/apk/release/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

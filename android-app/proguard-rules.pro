@@ -9,6 +9,15 @@
 -dontwarn com.google.errorprone.**
 -dontwarn org.slf4j.impl.**
 
+# Ktor - abaikan class yang tidak ditemukan R8 saat minifikasi release
+-dontwarn io.ktor.client.network.sockets.**
+-dontwarn io.ktor.client.plugins.HttpTimeout
+-dontwarn io.ktor.client.plugins.HttpTimeout$**
+-dontwarn io.ktor.client.plugins.observer.**
+-dontwarn io.ktor.util.KtorDsl
+-dontwarn io.ktor.utils.io.CoroutinesKt
+-dontwarn io.ktor.utils.io.core.Input
+
 # Keep inherited services.
 -if interface * { @retrofit2.http.* <methods>; }
 -keep,allowobfuscation interface * extends <1>
