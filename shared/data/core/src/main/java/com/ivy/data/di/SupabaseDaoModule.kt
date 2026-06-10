@@ -156,18 +156,6 @@ object SupabaseDaoModule {
         client: SupabaseClient, ws: WorkspaceResolver
     ): UserDao = SupabaseUserDao(client, ws)
 
-    @Provides
-    @Singleton
-    fun provideDefaultUserDao(
-        @Named("supabase") dao: UserDao
-    ): UserDao = dao
-
-    @Provides
-    @Singleton
-    fun provideDefaultLoanTrackerDao(
-        @Named("supabase") dao: LoanTrackerDao
-    ): LoanTrackerDao = dao
-
     // ---- Write DAOs ----
 
     @Provides
@@ -230,8 +218,8 @@ object SupabaseDaoModule {
     @Singleton
     @Named("supabase")
     fun provideWriteExchangeRatesDao(
-        client: SupabaseClient, ws: WorkspaceResolver, @Named("supabase") readDao: SupabaseExchangeRatesDao
-    ): WriteExchangeRatesDao = SupabaseWriteExchangeRatesDao(client, ws, readDao)
+        client: SupabaseClient, ws: WorkspaceResolver, @Named("supabase") readDao: ExchangeRatesDao
+    ): WriteExchangeRatesDao = SupabaseWriteExchangeRatesDao(client, ws, readDao as SupabaseExchangeRatesDao)
 
     @Provides
     @Singleton
@@ -245,7 +233,7 @@ object SupabaseDaoModule {
     @Named("supabase")
     fun provideWriteTagAssociationDao(
         client: SupabaseClient, ws: WorkspaceResolver
-    ): TagAssociationDao = SupabaseTagAssociationDao(client, ws)
+    ): WriteTagAssociationDao = SupabaseWriteTagAssociationDao(client, ws)
 
     @Provides
     @Singleton
