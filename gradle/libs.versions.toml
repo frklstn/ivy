@@ -15,7 +15,7 @@ kotlinx-collections = "0.3.7"
 paparazzi = "1.3.3"
 supabase-bom = "3.0.3"
 google-services-plugin-ver = "4.4.2"
-firebase-bom = "34.14.0"
+firebase-bom = "33.8.0"
 
 # Android
 min-sdk = "28"
