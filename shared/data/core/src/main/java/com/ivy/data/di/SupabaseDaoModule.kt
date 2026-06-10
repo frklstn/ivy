@@ -145,16 +145,28 @@ object SupabaseDaoModule {
     @Provides
     @Singleton
     @Named("supabase")
+    fun provideLoanTrackerDao(
+        client: SupabaseClient, ws: WorkspaceResolver
+    ): LoanTrackerDao = SupabaseLoanTrackerDao(client, ws)
+
+    @Provides
+    @Singleton
+    @Named("supabase")
     fun provideUserDao(
         client: SupabaseClient, ws: WorkspaceResolver
     ): UserDao = SupabaseUserDao(client, ws)
 
     @Provides
     @Singleton
-    @Named("supabase")
-    fun provideLoanTrackerDao(
-        client: SupabaseClient, ws: WorkspaceResolver
-    ): LoanTrackerDao = SupabaseLoanTrackerDao(client, ws)
+    fun provideDefaultUserDao(
+        @Named("supabase") dao: UserDao
+    ): UserDao = dao
+
+    @Provides
+    @Singleton
+    fun provideDefaultLoanTrackerDao(
+        @Named("supabase") dao: LoanTrackerDao
+    ): LoanTrackerDao = dao
 
     // ---- Write DAOs ----
 
@@ -241,4 +253,11 @@ object SupabaseDaoModule {
     fun provideWriteLoanTrackerDao(
         client: SupabaseClient, ws: WorkspaceResolver
     ): WriteLoanTrackerDao = SupabaseWriteLoanTrackerDao(client, ws)
+    
+    @Provides
+    @Singleton
+    @Named("supabase")
+    fun provideWriteTransactionDao(
+        client: SupabaseClient, ws: WorkspaceResolver
+    ): WriteTransactionDao = SupabaseWriteTransactionDao(client, ws)
 }
