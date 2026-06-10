@@ -53,9 +53,21 @@ jobs:
           TELEGRAM_CHAT_ID: "-1003913443231"
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
-          python scripts/telegram_notifier.py update "${{ steps.bot_start.outputs.msg_id }}" "Sedang membangun APK (assembleDemo)..." "$COMMIT_MSG" "$GITHUB_SHA"
-          # Simpan log ke file build.log sambil tetap menampilkannya di konsol
+          chmod +x scripts/*.sh
+          
+          # Buat file lock untuk menandakan build mulai
+          touch build_running.lock
+          
+          # Jalankan monitor di background
+          ./scripts/live_monitor.sh "${{ steps.bot_start.outputs.msg_id }}" "$COMMIT_MSG" "$GITHUB_SHA" &
+          MONITOR_PID=$!
+          
+          # Jalankan build
           ./gradlew assembleDemo 2>&1 | tee build.log
+          
+          # Hapus file lock untuk menghentikan monitor
+          rm build_running.lock
+          wait $MONITOR_PID || true
 
       - name: Bot - Success Notification
         if: success()

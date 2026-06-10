@@ -60,10 +60,16 @@ if __name__ == "__main__":
         status = sys.argv[3]
         commit_msg = sys.argv[4]
         sha = sys.argv[5][:7]
+        log_preview = sys.argv[6] if len(sys.argv) > 6 else ""
+        
         text = (f"<b>🚀 Membangun Ivy Wallet</b>\n\n"
                 f"📝 <b>Commit:</b> {commit_msg}\n"
-                f"branch: <code>main</code> ({sha})\n"
-                f"🔄 <b>Status:</b> {status}")
+                f"branch: <code>main</code> ({sha})\n\n"
+                f"🔄 <b>Status:</b> {status}\n")
+        
+        if log_preview:
+            text += f"\n📋 <b>Live Log:</b>\n<code>{log_preview}</code>"
+            
         edit_message(msg_id, text)
 
     elif action == "success":
