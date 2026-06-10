@@ -13,6 +13,9 @@ jobs:
       - name: Checkout GIT
         uses: actions/checkout@v4
 
+      - name: Restore google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > android-app/google-services.json
+
       - name: Setup Java SDK
         uses: actions/setup-java@v4
         with:
