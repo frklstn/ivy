@@ -1,10 +1,14 @@
 name: APK
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 
 on:
   push:
     branches:
       - main
   pull_request:
+
 
 jobs:
   assemble_demo_apk:
